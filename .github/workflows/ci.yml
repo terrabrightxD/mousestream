@@ -1,0 +1,29 @@
+name: SDK and portable tests
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: cmake -S . -B build/sdk
+      - run: cmake --build build/sdk --config Release
+      - run: ctest --test-dir build/sdk -C Release --output-on-failure
+      - run: python -m unittest discover -s tests -p "test_*.py"
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows'
+        with:
+          name: windows-sdk-unsigned
+          path: |
+            build/sdk/Release/mousestream.dll
+            build/sdk/Release/mousestream.lib
+            build/sdk/Release/passthrough.exe
+            include/
+          if-no-files-found: error

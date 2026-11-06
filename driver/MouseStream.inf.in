@@ -1,0 +1,59 @@
+; SPDX-License-Identifier: MIT
+; Generated for one HID mouse model, not a class-wide installation.
+[Version]
+Signature="$Windows NT$"
+Class=Extension
+ClassGuid={e2f84ce7-8efa-411c-aa69-97454ca4cb57}
+ExtensionId={4c019afc-5ba0-4fd9-b14d-5271a7805620}
+Provider=%Provider%
+DriverVer=11/06/2026,0.1.0.0
+CatalogFile=MouseStream.cat
+PnpLockdown=1
+
+[Manufacturer]
+%Provider%=Models,NTamd64.10.0...18362
+
+[Models.NTamd64.10.0...18362]
+%Description%=Install,@HARDWARE_ID@
+
+[Install.NT]
+CopyFiles=DriverFiles
+
+[Install.NT.Services]
+AddService=MouseStream,0,Service
+
+[Install.NT.Filters]
+AddFilter=MouseStream,,Filter
+
+[Filter]
+FilterPosition=Upper
+
+[Service]
+DisplayName=%Description%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%13%\MouseStream.sys
+
+[Install.NT.Wdf]
+KmdfService=MouseStream,Wdf
+
+[Wdf]
+KmdfLibraryVersion=1.29
+
+[DestinationDirs]
+DriverFiles=13
+
+[DriverFiles]
+MouseStream.sys
+
+[SourceDisksNames]
+1=%Disk%,,,
+
+[SourceDisksFiles]
+MouseStream.sys=1
+
+[Strings]
+Provider="MouseStream Project"
+Description="MouseStream Experimental Mouse Filter"
+Disk="MouseStream Driver Package"
